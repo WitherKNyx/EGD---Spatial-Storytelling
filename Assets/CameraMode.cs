@@ -18,6 +18,7 @@ public class CameraMode : MonoBehaviour
 
     [SerializeField]
     private CinemachineVirtualCamera planViewVCam;
+    [SerializeField]
     private CinemachineVirtualCamera elevationViewVCam;
     #endregion
 
