@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Cinemachine;
 
 public class CameraMode : MonoBehaviour
 {
@@ -8,32 +10,37 @@ public class CameraMode : MonoBehaviour
 
 	public static CamMode CurrentCamMode;
 
+    public static event Action OnCameraModeChanged;
+
     #region References
     [SerializeField] 
     private Camera _camera;
 
     [SerializeField]
-    private Transform _planTrans, _elevationTrans;
+    private CinemachineVirtualCamera planViewVCam;
+    private CinemachineVirtualCamera elevationViewVCam;
     #endregion
 
     void Awake()
     {
         CurrentCamMode = CamMode.plan; 
-        _camera.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-        _camera.transform.SetParent(_planTrans, false);
 	}
     
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && CurrentCamMode != CamMode.plan)
         {
 			CurrentCamMode = CamMode.plan;
-			_camera.transform.SetParent(_planTrans, false);
-		} else if (Input.GetMouseButtonDown(1))
+            OnCameraModeChanged?.Invoke();
+            planViewVCam.Priority = 1;
+            elevationViewVCam.Priority = 0;
+		} else if (Input.GetMouseButtonDown(1) && CurrentCamMode != CamMode.elevation)
         {
             CurrentCamMode = CamMode.elevation;
-			_camera.transform.SetParent(_elevationTrans, false);
-		}
+            OnCameraModeChanged?.Invoke();
+            planViewVCam.Priority = 0;
+            elevationViewVCam.Priority = 1;
+        }
     }
 }
