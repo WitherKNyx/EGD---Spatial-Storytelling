@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshRenderer), typeof(Collider), typeof(Rigidbody))]
 public abstract class EnemyAI : MonoBehaviour
 {
     [SerializeField]
@@ -31,16 +32,13 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected void Update()
 	{
-		if (_enemyType != CameraMode.CurrentCamMode)
-		{
-			_sprite.enabled = false;
-			_col.enabled = false;
-		} else
-		{
-			_sprite.enabled = true;
-			_col.enabled = true;
+		_sprite.enabled = _col.enabled = (_enemyType == CameraMode.CurrentCamMode);
+	}
+
+	protected void FixedUpdate()
+	{
+		if (_enemyType == CameraMode.CurrentCamMode)
 			UpdateMovement();
-		}
 	}
 
 	abstract protected void InitEnemy();

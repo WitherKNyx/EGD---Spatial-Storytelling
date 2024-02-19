@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ElevationEnemy : EnemyAI
@@ -12,6 +13,9 @@ public class ElevationEnemy : EnemyAI
 
 	protected override void UpdateMovement()
 	{
-		throw new System.NotImplementedException();
+		Vector3 targetDir = (_target.transform.position - transform.position);
+		targetDir.z = 0;
+		Vector3 moveVec = _speed * Time.fixedDeltaTime * targetDir.normalized;
+		transform.position += moveVec;
 	}
 }

@@ -12,6 +12,9 @@ public class PlanEnemy : EnemyAI
 
 	protected override void UpdateMovement()
 	{
-		throw new System.NotImplementedException();
+		Vector3 targetDir = (_target.transform.position - transform.position);
+		targetDir.y = 0;
+		Vector3 moveVec = _speed * Time.fixedDeltaTime * targetDir.normalized;
+		transform.position += moveVec;
 	}
 }
