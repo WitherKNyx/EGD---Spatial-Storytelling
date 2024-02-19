@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.InputSystem;
@@ -10,7 +11,10 @@ public class InputReader : MonoBehaviour
 {
     private PlayerInputActions playerActions;
     private InputAction move;
-    public Vector2 moveInput;
+    public static Vector2 moveInput;
+
+    public static event Action OnInputDetected;
+    public static event Action OnMove;
 
     private void Awake()
     {
@@ -35,6 +39,8 @@ public class InputReader : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        if(moveInput.magnitude > 0 ) { OnMove?.Invoke(); }
+
     }
 
 }
