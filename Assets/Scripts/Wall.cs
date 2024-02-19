@@ -7,7 +7,7 @@ public class Wall : MonoBehaviour
 {
     public void MixedRotate()
     {
-        if(CameraMode.CurrentCamMode == CameraMode.CamMode.mixed)
+        if(CameraMode.CurrentCamMode == ViewMode.mixed)
         {
             transform.Rotate(90f, 0f, 0f);
         }

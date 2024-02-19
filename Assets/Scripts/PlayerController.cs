@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
     private void EnableController()
     {
-        if (CameraMode.CurrentCamMode != CameraMode.CamMode.elevation)
+        if (CameraMode.CurrentCamMode != ViewMode.elevation)
         {
             ReturnToPreviousZPos();
             controlState = ControllerState.Topdown;

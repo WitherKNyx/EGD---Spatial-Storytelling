@@ -861,8 +861,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 801811159}
-  planViewVCam: {fileID: 1015560135}
-  elevationViewVCam: {fileID: 1398806223}
+  _planViewVCam: {fileID: 1015560135}
+  _elevationViewVCam: {fileID: 1398806223}
 --- !u!114 &806175039
 MonoBehaviour:
   m_ObjectHideFlags: 0
