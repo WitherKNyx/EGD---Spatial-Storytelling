@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7471218904588204656}
   - component: {fileID: 325085593468288115}
   - component: {fileID: 3971324646007287978}
-  - component: {fileID: 8684031521037629391}
+  - component: {fileID: 2934043369527425722}
   m_Layer: 0
-  m_Name: PlanEnemy
+  m_Name: ElevationEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4284261922937845101
 MeshFilter:
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8684031521037629391
+--- !u!114 &2934043369527425722
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6569946399789318864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71285e6867868aa43b3d47e78a5fe251, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d3010f593d43f443a52040a74775426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyType: 0
