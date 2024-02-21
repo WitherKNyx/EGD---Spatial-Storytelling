@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 moveDirection;
     
     [SerializeField] private float previousZPos = 0.0f;
-    [SerializeField] private bool canMoveSidescrollZ = false;
     #endregion
 
     #region State
@@ -172,7 +171,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //normalize movement direction along the spline
-        moveDirection = (splineDistanceRatio == 0f || splineDistanceRatio == 1f)? Vector3.zero : (nextPosition - currentPosition).normalized;
+        moveDirection = /*(splineDistanceRatio == 0f || splineDistanceRatio == 1f)? Vector3.zero :*/ (nextPosition - currentPosition).normalized;
         //Debug.Log("move Direction: " + moveDirection);
 
         Debug.DrawRay(currentPosition, moveDirection * 5f, Color.red);
@@ -208,15 +207,7 @@ public class PlayerController : MonoBehaviour
         splineLength = currentSpline.CalculateLength();
         splineInputType = spline.GetComponent<CustomSplineComponent>().GetInputType();
 
-        if(splineInputType == SplineInputType.ADInput)
-        {
-            splineDistanceRatio = (transform.position.x - currentSpline.transform.position.x) / splineLength;
-        }
-        else
-        {
-            previousZPos = int.MaxValue;
-            splineDistanceRatio = (transform.position.z - currentSpline.transform.position.z) / splineLength;
-        }
+        splineDistanceRatio = (transform.position.x - currentSpline.transform.position.x) / splineLength;
         
 
         

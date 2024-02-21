@@ -8,7 +8,7 @@ using UnityEngine.Splines;
 public class SplineJunction : MonoBehaviour
 {
     //[SerializeField] private SplineContainer[] connectedSplines = new SplineContainer[3];
-    [SerializeField] private SplineContainer forwardSpline, sideSpline, backwardSpline; 
+    [SerializeField] private SplineContainer backwardSpline, sideSpline, forwardSpline; 
 
     [SerializeField] private SplineContainer currentSpline;
 
@@ -55,6 +55,7 @@ public class SplineJunction : MonoBehaviour
             }
         }
         nextSpline = (backwardSpline != null && input == KeyCode.S) ? backwardSpline : (forwardSpline != null && input == KeyCode.W) ? forwardSpline : sideSpline;
+        if(currentSpline == nextSpline) { return; }
         interactable.InteractionVerified(true);
         currentSpline = nextSpline;
         OnSplineJunctionChanged?.Invoke(currentSpline);

@@ -70,7 +70,7 @@ public class DialogueManager : MonoBehaviour
 
 	private void Update()
 	{
-		if (GameManager.IsPaused) return;
+		if (GameManager.Instance.IsPaused) return;
 		if (Input.GetMouseButtonDown(0) && _currentLine != null)
 		{
 			StopCoroutine(_currentLine);

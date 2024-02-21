@@ -29,12 +29,16 @@ public class Interactable: MonoBehaviour
     #region State
     [SerializeField] InteractableState InteractState { get { return _state; } set { _state = value; } }
     [SerializeField] private InteractableState _state = InteractableState.Idle;
+    [SerializeField] private List<GameObject> detectedObjects;
     #endregion
 
-    [SerializeField] private List<GameObject> detectedObjects;
+    #region Interactable General Settings
+    [Tooltip("The view mode in which the interactable will start checking for events")]
+    [SerializeField] private ViewMode activeViewMode = ViewMode.elevation;
     [SerializeField] private float interactDelay = 0.5f;
     [Tooltip("A list of player inputs that can be used to trigger interaction state")]
     [SerializeField] private List<KeyCode> interactInputs;
+    #endregion
 
     #region Events
     public UnityEvent OnActivated;
@@ -51,7 +55,8 @@ public class Interactable: MonoBehaviour
 
     private void ChangeInteractStateWithCameraMode()
     {
-        if(CameraMode.CurrentCamMode == ViewMode.plan) { InteractState = InteractableState.Inactive; }
+        if (activeViewMode == ViewMode.mixed) { return; }
+        else if (CameraMode.CurrentCamMode == ViewMode.plan) { InteractState = InteractableState.Inactive; }
         else { InteractState = InteractableState.Idle; }
     }
 
@@ -148,6 +153,7 @@ public class Interactable: MonoBehaviour
 
     public void InteractionVerified(bool verified)
     {
+        Debug.Log("interaction success, invoking events");
         InteractState = verified ? InteractableState.Interacting : InteractableState.Idle;
     }
 
@@ -188,3 +194,4 @@ public enum InteractableState
     Interacting,
     Inactive
 }
+
