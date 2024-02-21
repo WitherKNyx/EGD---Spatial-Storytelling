@@ -21,6 +21,8 @@ public abstract class EnemyAI : MonoBehaviour
 	protected GameObject _target;
 	#endregion
 
+	private Vector3 _prevVelocity;
+
 	protected void Start()
 	{
 		_sprite = GetComponent<MeshRenderer>();
@@ -32,11 +34,22 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected void Update()
 	{
+		if (GameManager.Instance.IsPaused)
+		{
+			if (_prevVelocity == Vector3.zero) _prevVelocity = _rb.velocity;
+			_rb.velocity = Vector3.zero;
+			return;
+		} else
+		{
+			_rb.velocity = _prevVelocity;
+			_prevVelocity = Vector3.zero;
+		}
 		_sprite.enabled = _col.enabled = (_enemyType == CameraMode.CurrentCamMode);
 	}
 
 	protected void FixedUpdate()
 	{
+        if (GameManager.Instance.IsPaused) return;
 		if (_enemyType == CameraMode.CurrentCamMode)
 			UpdateMovement();
 	}
@@ -44,4 +57,10 @@ public abstract class EnemyAI : MonoBehaviour
 	abstract protected void InitEnemy();
 
 	abstract protected void UpdateMovement();
+
+	protected Vector3 GetMovementDir()
+	{
+		Vector3 moveDir = (_target.transform.position - transform.position);
+		return moveDir;
+	}
 }

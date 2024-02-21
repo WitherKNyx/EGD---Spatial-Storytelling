@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.Splines;
 
 [RequireComponent(typeof(CharacterController))]
@@ -69,6 +66,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance.IsPaused) return;
         if (Input.GetKeyDown(KeyCode.Space)) { SplineJunction.Instance.SwitchSpline(KeyCode.Space); }
         HandleMovement();
     }

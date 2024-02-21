@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.SceneView;
 
 [RequireComponent(typeof(PlayerInput))]
 public class InputReader : MonoBehaviour
