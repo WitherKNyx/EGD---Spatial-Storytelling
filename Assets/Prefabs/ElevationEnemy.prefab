@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 3211485823267420920}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &325085593468288115
 BoxCollider:
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyType: 0
   _speed: 120
+  _sprite: {fileID: 3337727639867371200}
 --- !u!95 &4719182583729031134
 Animator:
   serializedVersion: 5

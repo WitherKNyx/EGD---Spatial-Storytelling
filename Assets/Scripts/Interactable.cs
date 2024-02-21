@@ -52,6 +52,10 @@ public class Interactable: MonoBehaviour
     {
         CameraMode.OnCameraModeChanged += ChangeInteractStateWithCameraMode;
     }
+    private void OnDisable()
+    {
+        CameraMode.OnCameraModeChanged -= ChangeInteractStateWithCameraMode;
+    }
 
     private void ChangeInteractStateWithCameraMode()
     {

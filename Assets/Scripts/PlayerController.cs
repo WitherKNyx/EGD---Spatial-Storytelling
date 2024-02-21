@@ -72,7 +72,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-        CameraMode.OnCameraModeChanged += EnableController;
+        CameraMode.OnCameraModeChanged -= EnableController;
+        SplineJunction.OnSplineJunctionChanged -= SetActiveSpline;
     }
 
     private void OnPlayerStateChanged()

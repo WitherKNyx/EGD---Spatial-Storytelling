@@ -26,7 +26,7 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected void Start()
 	{
-		_sprite = GetComponent<SpriteRenderer>();
+		//_sprite = GetComponent<SpriteRenderer>();
 		_col = GetComponent<Collider>();
 		_rb = GetComponent<Rigidbody>();
 		_target = GameObject.FindGameObjectWithTag("Player");

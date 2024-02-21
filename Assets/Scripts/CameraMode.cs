@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum ViewMode { plan, elevation, mixed };
 
+[RequireComponent(typeof(Camera))]
 public class CameraMode : MonoBehaviour
 {
 	public static ViewMode CurrentCamMode;
@@ -30,15 +31,15 @@ public class CameraMode : MonoBehaviour
 		{
 			CurrentCamMode = ViewMode.plan;
 			OnCameraModeChanged?.Invoke();
-			_planViewVCam.Priority = 1;
-			_elevationViewVCam.Priority = 0;
+			_planViewVCam.Priority = 10;
+			_elevationViewVCam.Priority = 1;
 		}
 		else if (Input.GetMouseButtonDown(1) && CurrentCamMode != ViewMode.elevation)
 		{
 			CurrentCamMode = ViewMode.elevation;
 			OnCameraModeChanged?.Invoke();
-			_planViewVCam.Priority = 0;
-			_elevationViewVCam.Priority = 1;
+			_planViewVCam.Priority = 1;
+			_elevationViewVCam.Priority = 10;
 		}
 	}
 }
