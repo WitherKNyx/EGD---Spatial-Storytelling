@@ -13442,7 +13442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6447410847764754248, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6567491436943979192, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_Follow
@@ -13458,23 +13458,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7601080557397444332, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.682701
+      value: -0.24936865
       objectReference: {fileID: 0}
     - target: {fileID: 7601080557397444332, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.221038
+      value: 20.221035
       objectReference: {fileID: 0}
     - target: {fileID: 7601080557397444332, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -51.624454
+      value: 9.999999
       objectReference: {fileID: 0}
     - target: {fileID: 7601080557397444332, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7601080557397444332, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 8463857109397594552, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_ClearFlags
@@ -13486,7 +13486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8463857109397594552, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: orthographic size
-      value: 5
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 8463857109397594552, guid: c4e22194da5c30a42ae0df8eb8659548, type: 3}
       propertyPath: m_BackGroundColor.b
