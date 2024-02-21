@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Playables;
 using UnityEngine.Splines;
 
 [RequireComponent(typeof(CharacterController))]
@@ -12,6 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputReader input;
     [SerializeField] private Vector2 moveInput;
     [SerializeField] private SplineContainer currentSpline;
+    [SerializeField] private Animator planAnimator;
+    [SerializeField] private Animator elevationAnimator;
+    [SerializeField] private SpriteRenderer elevationSprite;
     #endregion
 
     #region Movement Variables
@@ -19,15 +24,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float speedChangeRate = 10f;
     [SerializeField] private float splineChangeRate = 0.05f;
+    [SerializeField] private float rotationSpeed = 40f;
     [SerializeField] private Vector3 moveDirection;
     
     [SerializeField] private float previousZPos = 0.0f;
+    [SerializeField] private float previousYRot = 0.0f;
     #endregion
 
     #region State
     [Tooltip("The current controller active, set to Topdown by default")]
     [SerializeField] private ControllerState controlState = ControllerState.Topdown;
     [SerializeField] private SplineInputType splineInputType = SplineInputType.ADInput;
+    public PlayerState CurrentPlayerState { get { return _playerState; } private set { _playerState = value; OnPlayerStateChanged(); } }
+    [SerializeField] private PlayerState _playerState;
+
+    [SerializeField] private Color damagedColor = Color.red;
     #endregion
 
     #region private variables
@@ -36,6 +47,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float splineLength;
     [SerializeField] private float splineDistanceRatio = 0.0f;
     [SerializeField] private bool active = true;
+    [SerializeField] private bool elevationSpriteFlipped = false;
     #endregion
 
     private void Awake()
@@ -66,11 +78,25 @@ public class PlayerController : MonoBehaviour
         CameraMode.OnCameraModeChanged += EnableController;
     }
 
+    private void OnPlayerStateChanged()
+    {
+        if(controlState == ControllerState.Topdown)
+        {
+            planAnimator.SetInteger("PlayerState", (int)CurrentPlayerState);
+        }
+        else
+        {
+            elevationAnimator.SetInteger("PlayerState", (int)CurrentPlayerState);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) { SplineJunction.Instance.SwitchSpline(KeyCode.Space); }
-        HandleMovement();
+        if(CurrentPlayerState != PlayerState.Damaged)
+        {
+            HandleMovement();
+        }
     }
 
     private void HandleMovement()
@@ -93,7 +119,12 @@ public class PlayerController : MonoBehaviour
         float targetSpeed = moveSpeed;
 
         //if no input, set target speed to 0
-        if (moveInput == Vector2.zero) { targetSpeed = 0f; }
+        if (moveInput == Vector2.zero)
+        { 
+            targetSpeed = 0f;
+            CurrentPlayerState = PlayerState.Idle;
+        }
+        else { CurrentPlayerState = PlayerState.Walking; }
 
         //accleration and deceleration
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0f, _controller.velocity.z).magnitude;
@@ -117,8 +148,14 @@ public class PlayerController : MonoBehaviour
         //normalize input direction
         Vector3 inputDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
 
+        if(moveInput.magnitude > 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(inputDirection.normalized), Time.deltaTime*rotationSpeed);
+        }
+
         Physics.SyncTransforms();
         // move the player controller
+
         _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime));
     }
 
@@ -131,7 +168,8 @@ public class PlayerController : MonoBehaviour
         float targetSpeed = moveSpeed;
 
         //if no input, set target speed to 0
-        if (moveInput == Vector2.zero) { targetSpeed = 0f; }
+        if (moveInput == Vector2.zero) { targetSpeed = 0f; CurrentPlayerState = PlayerState.Idle; }
+        else { CurrentPlayerState = PlayerState.Walking; }
 
         //accleration and deceleration
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0f, _controller.velocity.z).magnitude;
@@ -161,13 +199,17 @@ public class PlayerController : MonoBehaviour
                 splineDistanceRatio = Mathf.Clamp(splineDistanceRatio + _speed * Time.deltaTime / splineLength, 0f, 1f);
                 nextPosition = currentSpline.EvaluatePosition(splineDistanceRatio + ((inputMagnitude > 0.0f) ? splineChangeRate : 0f));
                 nextPosition = new Vector3(nextPosition.x, transform.position.y, nextPosition.z);
+                elevationSpriteFlipped = false;
+                
             }
             else if (inputValue < 0.0f)
             {
                 splineDistanceRatio = Mathf.Clamp(splineDistanceRatio - _speed * Time.deltaTime / splineLength, 0f, 1f);
                 nextPosition = currentSpline.EvaluatePosition(splineDistanceRatio - ((inputMagnitude > 0.0f) ? splineChangeRate : 0f));
                 nextPosition = new Vector3(nextPosition.x, transform.position.y, nextPosition.z);
+                elevationSpriteFlipped = true;
             }
+            if (elevationSprite.flipX != elevationSpriteFlipped) { elevationSprite.flipX = elevationSpriteFlipped; }
         }
 
         //normalize movement direction along the spline
@@ -187,11 +229,15 @@ public class PlayerController : MonoBehaviour
         {
             ReturnToPreviousZPos();
             controlState = ControllerState.Topdown;
+            planAnimator.enabled = true;
+            elevationAnimator.enabled = false;
         }
         else {
             previousZPos = transform.position.z;
+            transform.rotation = Quaternion.LookRotation(Vector3.zero);
             controlState = ControllerState.Sidescroller;
-            
+            planAnimator.enabled = false;
+            elevationAnimator.enabled = true;
         }
     }
 
@@ -208,24 +254,12 @@ public class PlayerController : MonoBehaviour
         splineInputType = spline.GetComponent<CustomSplineComponent>().GetInputType();
 
         splineDistanceRatio = (transform.position.x - currentSpline.transform.position.x) / splineLength;
-        
-
-        
-    }
-
-    private void SnapZToXYLine()
-    {
-        transform.SetPositionAndRotation(new Vector3(transform.position.x, transform.position.y, currentSpline.transform.position.z), Quaternion.identity);
     }
 
     private void ReturnToPreviousZPos()
     {
         if(previousZPos != int.MaxValue) {
             transform.SetPositionAndRotation(new Vector3(transform.position.x, transform.position.y, previousZPos), Quaternion.Euler(0f, 0f, 0f));
-        }
-        else
-        {
-
         }
     }
 

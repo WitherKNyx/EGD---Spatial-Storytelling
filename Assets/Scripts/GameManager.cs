@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
 
     public static GameState _state = GameState.Playing;
 
-    public static Scenes previousScene = Scenes.MainMenu;
-    public static Scenes currentScene = Scenes.MainMenu;
+    public Scenes previousScene = Scenes.MainMenu;
+    public Scenes currentScene = Scenes.MainMenu;
 
 	[SerializeField]
 	private GameObject _pauseMenu;
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour
         LoadSceneByEnum(previousScene);
     }
 
-    private static void UpdateScene(Scenes newScene)
+    private void UpdateScene(Scenes newScene)
     {
         previousScene = currentScene;
         currentScene = newScene;
