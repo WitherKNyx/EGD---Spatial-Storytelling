@@ -51,7 +51,18 @@ public abstract class EnemyAI : MonoBehaviour
 	{
         if (GameManager.Instance.IsPaused) return;
 		if (_enemyType == CameraMode.CurrentCamMode)
+		{
 			UpdateMovement();
+			if (PlayerController.Instance.CurrentPlayerState != PlayerState.Damaged &&
+				Vector3.Distance(transform.position, _target.transform.position) <= 1.5)
+			{
+				Vector3 knockbackDir = _target.transform.position - transform.position;
+				if (_enemyType == ViewMode.plan) knockbackDir.y = 0;
+				else knockbackDir.z = 0;
+				knockbackDir.Normalize();
+				PlayerController.Instance.DoDamage(knockbackDir);
+			}
+		}
 	}
 
 	abstract protected void InitEnemy();
