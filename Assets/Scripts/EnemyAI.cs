@@ -12,7 +12,8 @@ public abstract class EnemyAI : MonoBehaviour
 	protected float _speed;
 
 	#region References
-	protected MeshRenderer _sprite;
+	[SerializeField]
+	protected SpriteRenderer _sprite;
 
 	protected Collider _col;
 
@@ -25,7 +26,7 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected void Start()
 	{
-		_sprite = GetComponent<MeshRenderer>();
+		_sprite = GetComponent<SpriteRenderer>();
 		_col = GetComponent<Collider>();
 		_rb = GetComponent<Rigidbody>();
 		_target = GameObject.FindGameObjectWithTag("Player");

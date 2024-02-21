@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyType: 0
   _speed: 100
+  _sprite: {fileID: 7174445987846904762}
 --- !u!95 &8007363669418976710
 Animator:
   serializedVersion: 5

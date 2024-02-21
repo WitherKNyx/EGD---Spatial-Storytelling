@@ -134,7 +134,8 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: 7b37483ff70872b42a2d006f7983de76, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -749,11 +750,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: e6159ae4-27a7-4eab-8618-a97ec3619483
+  cloudProjectId: f1c5a018-2dc2-4fe0-af03-844bdb97894f
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: EGD - Spatial Storytelling
-  organizationId: gonzae7_org
+  organizationId: xeshe
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
