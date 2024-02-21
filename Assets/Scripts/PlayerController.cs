@@ -1,10 +1,5 @@
-using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Playables;
 using UnityEngine.Splines;
 
 [RequireComponent(typeof(CharacterController))]
@@ -40,6 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerState _playerState;
 
     [SerializeField] private Color damagedColor = Color.red;
+    private int _health = 3;
     #endregion
 
     #region private variables
@@ -99,6 +95,42 @@ public class PlayerController : MonoBehaviour
         {
             HandleMovement();
         }
+    }
+
+    public void DoDamage(Vector3 dir)
+    {
+        --_health;
+		if (_health == 0)
+        {
+            GameManager.Instance.GameOver();
+        } else
+        {
+			StartCoroutine(DoKnockback(dir));
+		}
+    }
+
+    private IEnumerator DoKnockback(Vector3 dir)
+    {
+        CurrentPlayerState = PlayerState.Damaged;
+        Vector3 currentPos = transform.position;
+        Vector3 desiredPos = transform.position + 7.5f * dir;
+        int steps = 20;
+        for (int i = 0; i < steps; ++i)
+        {
+            transform.position = Vector3.Lerp(currentPos, desiredPos, easeInOutExp((float)i / (float)steps));
+            yield return new WaitForSeconds(1f / steps);
+        }
+        transform.position = desiredPos;
+		CurrentPlayerState = PlayerState.Idle;
+	}
+
+    private float easeInOutExp(float t)
+    {
+        if (t == 0 || t == 1) return t;
+        return (t < 0.5 
+                ? Mathf.Pow(2, 20 * t - 10)
+                : 2 - Mathf.Pow(2, -20 * t + 10)
+            ) / 2;
     }
 
     private void HandleMovement()
