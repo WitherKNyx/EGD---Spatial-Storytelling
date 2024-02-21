@@ -8461,6 +8461,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3211485823267420920, guid: 45511a6ee0236ab44b49291249604fdc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3211485823267420920, guid: 45511a6ee0236ab44b49291249604fdc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3211485823267420920, guid: 45511a6ee0236ab44b49291249604fdc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3211485823267420920, guid: 45511a6ee0236ab44b49291249604fdc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.33333334
+      objectReference: {fileID: 0}
     - target: {fileID: 6569946399789318864, guid: 45511a6ee0236ab44b49291249604fdc, type: 3}
       propertyPath: m_Name
       value: ElevationEnemy
