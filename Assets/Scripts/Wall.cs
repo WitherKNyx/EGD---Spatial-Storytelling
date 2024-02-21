@@ -8,17 +8,25 @@ public class Wall : MonoBehaviour
     [SerializeField] private Transform frontPos;
     [SerializeField] private Transform backPos;
 
-    public void MixedRotate()
+    [SerializeField] private BoxCollider m_collider;
+
+    private void Start()
     {
-        if(CameraMode.CurrentCamMode == ViewMode.mixed)
-        {
-            transform.Rotate(90f, 0f, 0f);
-        }
+        TogglePlanWalls();
     }
 
-    private void OnDrawGizmos()
+    private void OnEnable()
     {
-        Gizmos.color = Color.blue;
-        
+        CameraMode.OnCameraModeChanged += TogglePlanWalls;
+    }
+
+    private void OnDisable()
+    {
+        CameraMode.OnCameraModeChanged -= TogglePlanWalls;
+    }
+
+    public void TogglePlanWalls()
+    {
+        m_collider.enabled = (CameraMode.CurrentCamMode == ViewMode.plan);
     }
 }

@@ -236,6 +236,7 @@ public class PlayerController : MonoBehaviour
         }
         else {
             previousZPos = transform.position.z;
+            if (splineInputType == SplineInputType.WSInput) { previousZPos = int.MaxValue; }
             transform.rotation = Quaternion.LookRotation(Vector3.zero);
             controlState = ControllerState.Sidescroller;
             planAnimator.enabled = false;
@@ -255,6 +256,8 @@ public class PlayerController : MonoBehaviour
         splineLength = currentSpline.CalculateLength();
         splineInputType = spline.GetComponent<CustomSplineComponent>().GetInputType();
 
+        if(splineInputType == SplineInputType.WSInput) { previousZPos = int.MaxValue; }
+
         splineDistanceRatio = (transform.position.x - currentSpline.transform.position.x) / splineLength;
     }
 
@@ -262,6 +265,10 @@ public class PlayerController : MonoBehaviour
     {
         if(previousZPos != int.MaxValue) {
             transform.SetPositionAndRotation(new Vector3(transform.position.x, transform.position.y, previousZPos), Quaternion.Euler(0f, 0f, 0f));
+        }
+        else
+        {
+
         }
     }
 
