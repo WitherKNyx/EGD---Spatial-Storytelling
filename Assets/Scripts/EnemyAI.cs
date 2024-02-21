@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer), typeof(Collider), typeof(Rigidbody))]
+[RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public abstract class EnemyAI : MonoBehaviour
 {
     [SerializeField]
@@ -54,7 +54,7 @@ public abstract class EnemyAI : MonoBehaviour
 		{
 			UpdateMovement();
 			if (PlayerController.Instance.CurrentPlayerState != PlayerState.Damaged &&
-				Vector3.Distance(transform.position, _target.transform.position) <= 1.5)
+				Vector3.Distance(transform.position, _target.transform.position) <= 2)
 			{
 				Vector3 knockbackDir = _target.transform.position - transform.position;
 				knockbackDir.y = 0;
