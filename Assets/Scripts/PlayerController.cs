@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour
     public void DoDamage(Vector3 dir)
     {
         --_health;
+        UIManager.Instance.HealthUI.SetHealth(_health);
 		if (_health == 0)
         {
             GameManager.Instance.GameOver();
