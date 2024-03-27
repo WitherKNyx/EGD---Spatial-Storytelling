@@ -52,7 +52,7 @@ public abstract class EnemyAI : MonoBehaviour
 
     protected void Update()
 	{
-		if (GameManager.Instance.IsPaused)
+		if (GameManager.Instance._state != GameState.Playing)
 		{
 			if (_prevVelocity == Vector3.zero) _prevVelocity = _rb.velocity;
 			_rb.velocity = Vector3.zero;
@@ -67,7 +67,7 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected void FixedUpdate()
 	{
-        if (GameManager.Instance.IsPaused) return;
+        if (GameManager.Instance._state != GameState.Playing) return;
 		if (_enemyType == CameraMode.CurrentCamMode && FindTarget())
 		{
 			UpdateMovement();

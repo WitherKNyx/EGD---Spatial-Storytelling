@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.IsPaused) return;
+        if (GameManager.Instance._state != GameState.Playing) return;
         if(CurrentPlayerState != PlayerState.Damaged)
         {
             HandleMovement();
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
         //normalize input direction
         Vector3 inputDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
 
-        if(moveInput.magnitude > 0)
+        if(inputDirection.magnitude > 0)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(inputDirection.normalized), Time.deltaTime*rotationSpeed);
         }

@@ -44,6 +44,5 @@ public class PlayerBrain : MonoBehaviour
             planController.enabled = false;
             elevationController.enabled = true;
         }
-        
     }
 }

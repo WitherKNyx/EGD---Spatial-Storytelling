@@ -64,16 +64,23 @@ public class ModeSwitchPoint : MonoBehaviour
             // TEMPORARY: insert call to procedure of events to switch the camera mode here
             // just remember to invoke OnModeSwitch and OnModeSwitched somewhere when the camera is being switched so the player's new position
             // can be sent to the PlayerBrain when switching player controllers
-
-            CameraMode.Instance.CanSwitch = false;
-            CameraMode.Instance.SwitchCameraMode();
-            OnModeSwitch.Invoke();
-            OnModeSwitched.Invoke(linkedSwitchPoint.GetSwitchPointToTeleport());
-
+            StartCoroutine(nameof(SwitchModeCo));
         }
         // request denied, no changes
         else { interactable.InteractionVerified(false); }
     }
+
+    private IEnumerator SwitchModeCo()
+    {
+        GameManager.Instance._state = GameState.Transitioning;
+		VFXManager.Instance.SmokeTransition();
+        yield return new WaitForSeconds(2);
+		CameraMode.Instance.CanSwitch = false;
+		CameraMode.Instance.SwitchCameraMode();
+		OnModeSwitch.Invoke();
+		OnModeSwitched.Invoke(linkedSwitchPoint.GetSwitchPointToTeleport());
+		GameManager.Instance._state = GameState.Playing;
+	}
 
     public void EnableSwitchUIPrompt()
     {
