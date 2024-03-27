@@ -749,11 +749,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: f1c5a018-2dc2-4fe0-af03-844bdb97894f
+  cloudProjectId: e6159ae4-27a7-4eab-8618-a97ec3619483
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: EGD - Spatial Storytelling
-  organizationId: xeshe
+  organizationId: gonzae7_org
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
