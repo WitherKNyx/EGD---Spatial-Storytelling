@@ -139,13 +139,13 @@ public class GameManager : MonoBehaviour
             case Scenes.MainMenu:
                 UpdateScene(Scenes.MainMenu);
                 //UnloadCurrentAdditiveScene();
-                LoadSceneAdditive("MainMenu");
+                LoadScene("MainMenu");
                 OnMainMenuLoaded?.Invoke();
                 break;
             case Scenes.Level1:
                 UpdateScene(Scenes.Level1);
                 //UnloadCurrentAdditiveScene();
-                LoadSceneAdditive("Level1");
+                LoadScene("Level1");
                 OnLevel1Loaded?.Invoke();
                 break;
             case Scenes.Level2:
@@ -168,14 +168,14 @@ public class GameManager : MonoBehaviour
                 break;
             case Scenes.GameOver:
                 UpdateScene(Scenes.GameOver);
-                UnloadCurrentAdditiveScene();
-                LoadSceneAdditive("GameOver");
+                //UnloadCurrentAdditiveScene();
+                LoadScene("GameOver");
                 OnGameOverLoaded?.Invoke();
                 break;
             case Scenes.End:
                 UpdateScene(Scenes.End);
-                UnloadCurrentAdditiveScene();
-                LoadSceneAdditive("End");
+                //UnloadCurrentAdditiveScene();
+                LoadScene("End");
                 OnEndLoaded?.Invoke();
                 break;
             default:

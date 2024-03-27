@@ -19,21 +19,38 @@ public abstract class EnemyAI : MonoBehaviour
 
 	protected Rigidbody _rb;
 
-	protected GameObject _target;
+	[SerializeField] protected GameObject _target;
 	#endregion
 
 	private Vector3 _prevVelocity;
 
-	protected void Start()
+    #region Physics Raycast
+    [SerializeField] private float damageRadius = 2f;
+    [Tooltip("Layers that the Enemy should check for when inflicting")]
+    [SerializeField] private LayerMask damageableLayers;
+    [Tooltip("How triggers should be treated when detecting for damage, set to Ignore by default")]
+    [SerializeField] private QueryTriggerInteraction damageTriggers = QueryTriggerInteraction.Ignore;
+
+	[SerializeField] private float targetRadius = 8f;
+    [Tooltip("Layers that the Enemy should check for when searching for targets")]
+    [SerializeField] private LayerMask targetLayers;
+    [Tooltip("How triggers should be treated when detecting for damage, set to Ignore by default")]
+    [SerializeField] private QueryTriggerInteraction targetTriggers = QueryTriggerInteraction.Ignore;
+    #endregion
+
+    [SerializeField] private Color damageRadiusColor = Color.green;
+    [SerializeField] private Color targetRadiusColor = Color.cyan;
+
+    protected void Start()
 	{
 		//_sprite = GetComponent<SpriteRenderer>();
 		_col = GetComponent<Collider>();
 		_rb = GetComponent<Rigidbody>();
-		_target = GameObject.FindGameObjectWithTag("Player");
+		//_target = GameObject.FindGameObjectWithTag("Player");
 		InitEnemy();
 	}
 
-	protected void Update()
+    protected void Update()
 	{
 		if (GameManager.Instance.IsPaused)
 		{
@@ -51,18 +68,35 @@ public abstract class EnemyAI : MonoBehaviour
 	protected void FixedUpdate()
 	{
         if (GameManager.Instance.IsPaused) return;
-		if (_enemyType == CameraMode.CurrentCamMode)
+		if (_enemyType == CameraMode.CurrentCamMode && FindTarget())
 		{
 			UpdateMovement();
-			if (PlayerController.Instance.CurrentPlayerState != PlayerState.Damaged &&
-				Vector3.Distance(transform.position, _target.transform.position) <= 2)
+			RaycastHit[] hits = Physics.SphereCastAll(transform.position, damageRadius, Vector3.up, 1.0f, damageableLayers, damageTriggers);
+			// use a sphere cast for the damage hitbox
+			if (hits.Length > 0)
 			{
-				Vector3 knockbackDir = _target.transform.position - transform.position;
-				knockbackDir.y = 0;
-				if (_enemyType == ViewMode.elevation) knockbackDir.z = 0;
-				knockbackDir.Normalize();
-				PlayerController.Instance.DoDamage(knockbackDir);
+				Debug.Log("hit something, checking if player");
+                foreach (RaycastHit hit in hits)
+				{
+                    // check that the collider hit was a PlayerController
+                    if (hit.collider.GetComponent<PlayerController>() != null)
+                    {
+                        PlayerController _player = hit.collider.GetComponent<PlayerController>();
+                        // check that the player can be damaged
+                        if (_player.CurrentPlayerState != PlayerState.Damaged)
+                        {
+                            Debug.Log("inflicting damage to player");
+                            Vector3 knockbackDir = _player.transform.position - transform.position;
+                            knockbackDir.y = 0;
+                            if (_enemyType == ViewMode.elevation) knockbackDir.z = 0;
+                            knockbackDir.Normalize();
+                            _player.DoDamage(knockbackDir);
+                        }
+                    }
+                }
+				
 			}
+			Debug.Log("did not hit anything");
 		}
 	}
 
@@ -75,4 +109,39 @@ public abstract class EnemyAI : MonoBehaviour
 		Vector3 moveDir = (_target.transform.position - transform.position);
 		return moveDir;
 	}
+
+    protected bool FindTarget()
+    {
+		RaycastHit[] hits = Physics.SphereCastAll(transform.position, targetRadius, Vector3.up, 1.0f, targetLayers, targetTriggers);
+		if(hits.Length > 0)
+		{
+			bool targetFound = false;
+			foreach(RaycastHit hit in hits)
+			{
+                // check that the collider hit was a PlayerController
+                if (hit.collider.GetComponent<PlayerController>() != null)
+                {
+					targetFound = true;
+                    PlayerController _player = hit.collider.GetComponent<PlayerController>();
+                    // set the player controller as the target if target is currently null
+					if(_target == null)
+					{
+						_target = _player.gameObject;
+					}
+                }
+            }
+			return targetFound;
+		}
+        _target = null;
+        return false;
+    }
+
+    protected void OnDrawGizmos()
+    {
+		Gizmos.color = damageRadiusColor;
+		Gizmos.DrawSphere(transform.position, damageRadius);
+
+        Gizmos.color = targetRadiusColor;
+        Gizmos.DrawSphere(transform.position, targetRadius);
+    }
 }
