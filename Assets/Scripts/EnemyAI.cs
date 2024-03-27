@@ -20,6 +20,9 @@ public abstract class EnemyAI : MonoBehaviour
 	protected Rigidbody _rb;
 
 	[SerializeField] protected GameObject _target;
+
+	[SerializeField] private GameObject returnLocation;
+
 	#endregion
 
 	private Vector3 _prevVelocity;
@@ -38,8 +41,17 @@ public abstract class EnemyAI : MonoBehaviour
     [SerializeField] private QueryTriggerInteraction targetTriggers = QueryTriggerInteraction.Ignore;
     #endregion
 
+    #region Gizmos
     [SerializeField] private Color damageRadiusColor = Color.green;
     [SerializeField] private Color targetRadiusColor = Color.cyan;
+    #endregion
+
+    #region State
+    public EnemyState CurrentEnemyState { get { return _state; } private set { _state = value; } }
+	[SerializeField] private EnemyState _state;
+
+	[SerializeField] private float waitDuration = 2f;
+    #endregion
 
     protected void Start()
 	{
@@ -96,8 +108,21 @@ public abstract class EnemyAI : MonoBehaviour
                 }
 				
 			}
-			else 
-				Debug.Log("did not hit anything");
+			else if(CurrentEnemyState == EnemyState.Chasing)
+			{
+				StartCoroutine(WaitForTarget());
+			}
+			Debug.Log("did not hit anything");
+		}
+		else if(_enemyType == CameraMode.CurrentCamMode && CurrentEnemyState == EnemyState.Returning)
+		{
+			Debug.Log("returning");
+			_target = returnLocation;
+			UpdateMovement();
+			if(Vector3.Distance(returnLocation.transform.position, transform.position) < 0.05f)
+			{
+				CurrentEnemyState = EnemyState.Idle;
+			}
 		}
 	}
 
@@ -125,17 +150,29 @@ public abstract class EnemyAI : MonoBehaviour
 					targetFound = true;
                     PlayerController _player = hit.collider.GetComponent<PlayerController>();
                     // set the player controller as the target if target is currently null
-					if(_target == null)
+					if(_target == null || CurrentEnemyState == EnemyState.Waiting || CurrentEnemyState == EnemyState.Returning)
 					{
 						_target = _player.gameObject;
 					}
                 }
             }
+			if(targetFound) {
+                StopCoroutine(WaitForTarget());
+                CurrentEnemyState = EnemyState.Chasing; 
+			}
+			
 			return targetFound;
 		}
         _target = null;
         return false;
     }
+
+	private IEnumerator WaitForTarget()
+	{
+		CurrentEnemyState = EnemyState.Waiting;
+		yield return new WaitForSeconds(waitDuration);
+		CurrentEnemyState = EnemyState.Returning;
+	}
 
     protected void OnDrawGizmos()
     {
@@ -145,4 +182,12 @@ public abstract class EnemyAI : MonoBehaviour
         Gizmos.color = targetRadiusColor;
         Gizmos.DrawSphere(transform.position, targetRadius);
     }
+}
+
+public enum EnemyState
+{
+	Idle,
+	Chasing,
+	Waiting,
+	Returning
 }

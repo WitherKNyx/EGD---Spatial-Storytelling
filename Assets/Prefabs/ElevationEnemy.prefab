@@ -99,6 +99,22 @@ MonoBehaviour:
   _enemyType: 0
   _speed: 120
   _sprite: {fileID: 3337727639867371200}
+  _target: {fileID: 0}
+  returnLocation: {fileID: 0}
+  damageRadius: 2
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  damageTriggers: 1
+  targetRadius: 8
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  targetTriggers: 1
+  damageRadiusColor: {r: 1, g: 0.14901961, b: 0, a: 0.4392157}
+  targetRadiusColor: {r: 0.93333334, g: 0.3137255, b: 1, a: 0.40392157}
+  _state: 0
+  waitDuration: 2
 --- !u!95 &4719182583729031134
 Animator:
   serializedVersion: 5
@@ -145,8 +161,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9047860756593563302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.33333334, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 677312375495285415}

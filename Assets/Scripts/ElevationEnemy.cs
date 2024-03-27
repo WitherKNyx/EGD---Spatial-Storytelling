@@ -11,7 +11,15 @@ public class ElevationEnemy : EnemyAI
 	protected override void UpdateMovement()
 	{
 		Vector3 targetDir = GetMovementDir();
-		targetDir.z = 0;
+		if(targetDir.x > 0)
+		{
+			_sprite.flipX = true;
+		}
+        else if (targetDir.x < 0)
+        {
+            _sprite.flipX = false;
+        }
+        targetDir.z = 0;
 		Vector3 moveVec = _speed * Time.fixedDeltaTime * targetDir.normalized;
 		_rb.velocity = moveVec;
 	}
