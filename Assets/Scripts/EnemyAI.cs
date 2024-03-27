@@ -96,7 +96,8 @@ public abstract class EnemyAI : MonoBehaviour
                 }
 				
 			}
-			Debug.Log("did not hit anything");
+			else 
+				Debug.Log("did not hit anything");
 		}
 	}
 

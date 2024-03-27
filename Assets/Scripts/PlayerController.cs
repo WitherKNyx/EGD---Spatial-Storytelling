@@ -112,22 +112,24 @@ public class PlayerController : MonoBehaviour
         CurrentPlayerState = PlayerState.Damaged;
         Vector3 currentPos = transform.position;
         Vector3 desiredPos = transform.position + 7.5f * dir;
-        int steps = 20;
-        for (int i = 0; i < steps + 1; ++i)
+        Ray ray = new (transform.position, dir);
+        if (Physics.Raycast(ray, 0.1f)) yield break;
+		
+		int steps = 20;
+        int i;
+        for (i = 0; i <= steps; ++i)
         {
             Vector3 movePos = Vector3.Lerp(currentPos, desiredPos, EaseInOutExp((float)i / steps));
-            if (Physics.Raycast(
-                    new Ray(transform.position, movePos), 
-                    out RaycastHit info, 
-                    Vector3.Distance(transform.position, movePos)
-                )) {
-                Debug.Log("HIT");
+            if (Physics.Raycast(ray, out RaycastHit info, 
+                    Vector3.Distance(transform.position, movePos))) {
+                Debug.Log("HIT " + info.collider.name);
 				transform.position = info.point;
                 break;
             }
             transform.position = movePos;
 			yield return new WaitForSeconds(1f / steps);
         }
+        yield return new WaitForSeconds((20f - i + 1) / steps);
 		CurrentPlayerState = PlayerState.Idle;
 	}
 

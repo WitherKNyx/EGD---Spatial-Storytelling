@@ -11,7 +11,7 @@ public class PlanEnemy : EnemyAI
 	protected override void UpdateMovement()
 	{
 		Vector3 targetDir = GetMovementDir();
-		Debug.Log(targetDir);
+		//Debug.Log(targetDir);
 		targetDir.y = 0;
 		Vector3 moveVec = _speed * Time.fixedDeltaTime * targetDir.normalized;
 		_rb.velocity = moveVec;
