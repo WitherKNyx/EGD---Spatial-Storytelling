@@ -5,7 +5,7 @@ public class PlanEnemy : EnemyAI
 	protected override void InitEnemy()
 	{
 		_enemyType = ViewMode.plan;
-		//_rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+		_rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
 	}
 
 	protected override void UpdateMovement()

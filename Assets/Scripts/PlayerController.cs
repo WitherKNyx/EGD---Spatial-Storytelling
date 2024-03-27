@@ -113,23 +113,23 @@ public class PlayerController : MonoBehaviour
         Vector3 currentPos = transform.position;
         Vector3 desiredPos = transform.position + 7.5f * dir;
         Ray ray = new (transform.position, dir);
-        if (Physics.Raycast(ray, 0.1f)) yield break;
+        if (Physics.Raycast(ray, 0.1f, LayerMask.NameToLayer("Environment"))) yield break;
 		
 		int steps = 20;
         int i;
         for (i = 0; i <= steps; ++i)
         {
             Vector3 movePos = Vector3.Lerp(currentPos, desiredPos, EaseInOutExp((float)i / steps));
-            if (Physics.Raycast(ray, out RaycastHit info, 
-                    Vector3.Distance(transform.position, movePos))) {
-                Debug.Log("HIT " + info.collider.name);
+            ray = new(transform.position, dir);
+            if (Physics.Raycast(ray, out RaycastHit info, Vector3.Distance(transform.position, movePos), ~LayerMask.NameToLayer("Environment"))) {
 				transform.position = info.point;
                 break;
             }
             transform.position = movePos;
 			yield return new WaitForSeconds(1f / steps);
         }
-        yield return new WaitForSeconds((20f - i + 1) / steps);
+		CurrentPlayerState = PlayerState.Invulnerable;
+		yield return new WaitForSeconds((26f - i) / steps);
 		CurrentPlayerState = PlayerState.Idle;
 	}
 
@@ -176,11 +176,11 @@ public class PlayerController : MonoBehaviour
         float speedOffset = 0.1f;
         float inputMagnitude = moveInput.magnitude;
 
-        //accelerate or decelerate to target speed
-        if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
-        {
-            //curved result rather than linear, for more organic speed change
-            _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * speedChangeRate);
+		//accelerate or decelerate to target speed
+		if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
+		{
+			//curved result rather than linear, for more organic speed change
+			_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * speedChangeRate);
 
             _speed = Mathf.Round(_speed * 1000f) / 1000f;
         }
@@ -299,7 +299,8 @@ public enum PlayerState
 {
     Idle,
     Walking,
-    Damaged
+    Damaged,
+    Invulnerable
 }
 
 public enum ControllerState
