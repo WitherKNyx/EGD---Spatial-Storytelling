@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Splines;
 using UnityEngine.InputSystem;
 using Unity.Properties;
 using UnityEngine.InputSystem.Controls;
@@ -27,14 +26,14 @@ public class Interactable: MonoBehaviour
     #endregion
 
     #region State
-    [SerializeField] InteractableState InteractState { get { return _state; } set { _state = value; } }
+    public InteractableState InteractState { get { return _state; } set { _state = value; } }
     [SerializeField] private InteractableState _state = InteractableState.Idle;
     [SerializeField] private List<GameObject> detectedObjects;
     #endregion
 
     #region Interactable General Settings
     [Tooltip("The view mode in which the interactable will start checking for events")]
-    [SerializeField] private ViewMode activeViewMode = ViewMode.elevation;
+    [SerializeField] private ViewMode activeViewMode = ViewMode.plan;
     [SerializeField] private float interactDelay = 0.5f;
     [Tooltip("A list of player inputs that can be used to trigger interaction state")]
     [SerializeField] private List<KeyCode> interactInputs;
@@ -60,13 +59,14 @@ public class Interactable: MonoBehaviour
     private void ChangeInteractStateWithCameraMode()
     {
         if (activeViewMode == ViewMode.mixed) { return; }
-        else if (CameraMode.CurrentCamMode == ViewMode.plan) { InteractState = InteractableState.Inactive; }
-        else { InteractState = InteractableState.Idle; }
+        else if (CameraMode.CurrentCamMode == activeViewMode) { InteractState = InteractableState.Idle; }
+        else { InteractState = InteractableState.Inactive; }
     }
 
     private void Start()
     {
         if (!interactCenter) interactCenter = transform;
+        
         ChangeInteractStateWithCameraMode();
     }
 
@@ -123,7 +123,6 @@ public class Interactable: MonoBehaviour
             foreach(KeyCode input in interactInputs)
             {
                 if (Input.GetKey(input)) {
-                    Debug.Log("interaction detected, checking for success");
                     InteractState = InteractableState.Verifying;
                     OnInteractionInputDetected?.Invoke(input);
                     StartCoroutine(VerifyInteraction());
@@ -143,6 +142,7 @@ public class Interactable: MonoBehaviour
         yield return new WaitWhile(() => InteractState == InteractableState.Verifying);
     }
 
+    // sets the interactable state to idle after a certain amount of time
     private IEnumerator ResetInteractions()
     {
         yield return new WaitForSeconds(interactDelay);
@@ -157,7 +157,6 @@ public class Interactable: MonoBehaviour
 
     public void InteractionVerified(bool verified)
     {
-        Debug.Log("interaction success, invoking events");
         InteractState = verified ? InteractableState.Interacting : InteractableState.Idle;
     }
 

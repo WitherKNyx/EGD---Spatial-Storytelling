@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public bool IsPaused = false;
 
-    public static GameState _state = GameState.Playing;
+    public GameState _state = GameState.Playing;
 
     public Scenes previousScene = Scenes.MainMenu;
     public Scenes currentScene = Scenes.MainMenu;
+
+    [SerializeField] private Scene _activeScene;
 
 	[SerializeField]
 	private GameObject _pauseMenu;
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
 		if (Instance == null)
 		{
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
+			//DontDestroyOnLoad(gameObject);
 		} else
 			Destroy(gameObject);
 
@@ -61,7 +63,7 @@ public class GameManager : MonoBehaviour
 
 	public void TogglePause()
     {
-        if(_state == GameState.Menu)
+        if(_state == GameState.Transitioning) { return; }
         Time.timeScale = IsPaused ? 1.0f : 0.0f;
         IsPaused = !IsPaused;
         if (IsPaused)
@@ -116,6 +118,17 @@ public class GameManager : MonoBehaviour
 
 	public static void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
+    public void LoadSceneAdditive(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+        //StartCoroutine(LoadAdditive(sceneName));
+    }
+
+    public void UnloadCurrentAdditiveScene()
+    {
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+    }
+
     public void LoadSceneByEnum(Scenes scene)
     {
         Debug.Log("Loading new scene");
@@ -125,16 +138,19 @@ public class GameManager : MonoBehaviour
         {
             case Scenes.MainMenu:
                 UpdateScene(Scenes.MainMenu);
-                LoadScene("MainMenu");
+                //UnloadCurrentAdditiveScene();
+                LoadSceneAdditive("MainMenu");
                 OnMainMenuLoaded?.Invoke();
                 break;
             case Scenes.Level1:
                 UpdateScene(Scenes.Level1);
-                LoadScene("Level1");
+                //UnloadCurrentAdditiveScene();
+                LoadSceneAdditive("Level1");
                 OnLevel1Loaded?.Invoke();
                 break;
             case Scenes.Level2:
                 UpdateScene(Scenes.Level2);
+                //UnloadCurrentAdditiveScene();
                 LoadScene("Level2");
                 OnLevel2Loaded?.Invoke();
                 break;
@@ -152,12 +168,14 @@ public class GameManager : MonoBehaviour
                 break;
             case Scenes.GameOver:
                 UpdateScene(Scenes.GameOver);
-                LoadScene("GameOver");
+                UnloadCurrentAdditiveScene();
+                LoadSceneAdditive("GameOver");
                 OnGameOverLoaded?.Invoke();
                 break;
             case Scenes.End:
                 UpdateScene(Scenes.End);
-                LoadScene("End");
+                UnloadCurrentAdditiveScene();
+                LoadSceneAdditive("End");
                 OnEndLoaded?.Invoke();
                 break;
             default:
@@ -176,6 +194,11 @@ public class GameManager : MonoBehaviour
         currentScene = newScene;
     }
 
+    private void UnloadScene()
+    {
+
+    }
+
     public void ResetUI()
     {
         for(int i = 0; i < transform.childCount; i++)
@@ -183,12 +206,24 @@ public class GameManager : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(false);
         }
     }
+    
+    private IEnumerator LoadAdditive(string sceneName)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        yield return new WaitUntil(() => operation.isDone);
+        if (SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName)))
+        {
+            _activeScene = SceneManager.GetActiveScene();
+        }
+    }
+
 }
 
 public enum GameState
 {
     Paused,
     Playing,
+    Transitioning,
     Menu
 }
 
